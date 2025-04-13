@@ -1,5 +1,8 @@
 const { createApp } = Vue;
 
+// Render のベースURL（デプロイ先に合わせて変える）
+const API_BASE = 'https://flask-vue-app.onrender.com';
+
 createApp({
   delimiters: ['[[', ']]'],
   data() {
@@ -11,18 +14,20 @@ createApp({
     };
   },
   methods: {
+    // ユーザー一覧取得
     fetchUsers() {
-      fetch('/api/users')
+      fetch(`${API_BASE}/api/users`)
         .then((res) => res.json())
         .then((data) => {
           this.users = data;
         });
     },
+    // ユーザー追加
     addUser() {
       const username = this.newUsername.trim();
       if (!username) return;
 
-      fetch('/api/add_user', {
+      fetch(`${API_BASE}/api/add_user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username }),
@@ -35,25 +40,30 @@ createApp({
           }
         });
     },
+    // ユーザー削除
     deleteUser(id) {
       if (!confirm('本当に削除しますか？')) return;
-      fetch(`/api/delete/${id}`, { method: 'DELETE' }).then(() => {
+
+      fetch(`${API_BASE}/api/delete/${id}`, { method: 'DELETE' }).then(() => {
         this.users = this.users.filter((u) => u.id !== id);
       });
     },
+    // 編集開始
     startEdit(user) {
       this.editingId = user.id;
       this.editedName = user.username;
     },
+    // 編集キャンセル
     cancelEdit() {
       this.editingId = null;
       this.editedName = '';
     },
+    // 名前を更新
     updateUser(id) {
       const newName = this.editedName.trim();
       if (!newName) return;
 
-      fetch(`/api/update/${id}`, {
+      fetch(`${API_BASE}/api/update/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: newName }),
@@ -68,6 +78,6 @@ createApp({
     },
   },
   mounted() {
-    this.fetchUsers();
+    this.fetchUsers(); // ページ読み込み時に一覧取得
   },
 }).mount('#app');
