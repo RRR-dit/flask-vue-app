@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vueでユーザー一覧表示</title>
+
+    <!-- Vue.js v3 をCDNで読み込む（Composition API対応） -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <!-- Bootstrap 5.3 をCDNで読み込む（スタイリング用） -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <!-- Bootstrap の背景色クラス（明るめの背景） -->
+  <body class="bg-light">
+    <!-- Vueのマウント先（IDが'app'） -->
+    <div id="app" class="container py-5">
+      <h1 class="mb-4 text-primary">ユーザー一覧</h1>
+
+      <!-- 🔽 名前入力フォーム -->
+      <!-- @submit.prevent：Vueのイベント。送信時にページをリロードせず addUser() を呼ぶ -->
+      <form @submit.prevent="addUser" class="mb-4 row g-2 align-items-center">
+        <div class="col-auto">
+          <!-- v-modelでVueのデータとバインド -->
+          <input type="text" v-model="newUsername" class="form-control" placeholder="名前を入力" />
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-success">追加</button>
+        </div>
+      </form>
+
+      <!-- 🔽 ユーザー一覧（v-forでループ表示） -->
+      <ul class="list-group">
+        <li
+          v-for="user in users"
+          :key="user.id"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <!-- 編集中のユーザー（editingId）と一致する場合、入力UIを表示 -->
+          <div v-if="editingId === user.id" class="w-100 d-flex align-items-center gap-2">
+            <input v-model="editedName" class="form-control" />
+            <button @click="updateUser(user.id)" class="btn btn-primary btn-sm">保存</button>
+            <button @click="cancelEdit()" class="btn btn-secondary btn-sm">キャンセル</button>
+          </div>
+
+          <!-- 編集中でない場合：ユーザー情報 + 編集/削除ボタン -->
+          <div v-else class="d-flex justify-content-between w-100">
+            <span>ID: [[ user.id ]] / 名前: [[ user.username ]]</span>
+            <div>
+              <!-- 編集ボタンを押すと editingId がセットされる -->
+              <button @click="startEdit(user)" class="btn btn-outline-primary btn-sm me-2">
+                編集
+              </button>
+              <!-- 削除ボタンで該当IDのユーザーを削除 -->
+              <button @click="deleteUser(user.id)" class="btn btn-outline-danger btn-sm">
+                削除
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Vueロジックを含んだ main.js を読み込む -->
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>
+<!-- v-model	データとフォームをバインド -->
+<!-- v-for	配列をループ表示（一覧） -->
+<!-- v-if / v-else	条件に応じてUIを切り替える（編集 or 通常表示） -->
+<!-- @click / @submit	Vueのイベントハンドラ -->
+<!-- [[ user.username ]]	Vueの描画（delimitersを [[ ]] にしてJinjaと区別） -->
+<!-- Bootstrap で統一感あるUI -->
+<!-- モバイルでも崩れにくいレスポンシブ構成（container, row, col-auto） -->
+<!-- 編集中だけ input を表示する SPA的UX -->
+<!-- @click / @submit.prevent で再読み込みなしのスムーズな操作性 -->

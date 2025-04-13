@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vueでユーザー一覧表示</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>ユーザー一覧</h1>
+      <ul>
+        <li v-for="user in users" :key="user.id">ID: [[ user.id ]] / 名前: [[ user.username ]]</li>
+      </ul>
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>

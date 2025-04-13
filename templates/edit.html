@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>名前の編集</title>
+  </head>
+  <body>
+    <h1>ID: {{ user.id }} の名前を編集</h1>
+
+    <form method="POST">
+      {{ form.hidden_tag() }} {{ form.username.label }}<br />
+      {{ form.username(size=30) }}<br />
+      {% for error in form.username.errors %}
+      <span style="color: red">{{ error }}</span><br />
+      {% endfor %}
+
+      <br />
+      {{ form.submit() }}
+    </form>
+
+    <a href="/users">一覧に戻る</a>
+  </body>
+</html>

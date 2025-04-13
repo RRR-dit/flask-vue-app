@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>登録ユーザー一覧</title>
+  </head>
+  <body>
+    <h1>保存された名前一覧</h1>
+
+    {% if users %}
+    <ul>
+      {% for user in users %}
+      <li>
+        ID: {{ user.id }} / 名前: {{ user.username }}
+        <form method="POST" action="/delete/{{ user.id }}" style="display: inline">
+          <button type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
+        </form>
+        <a href="/edit/{{ user.id }}">編集</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>まだユーザーは登録されていません。</p>
+    {% endif %}
+
+    <a href="/">トップページへ戻る</a>
+  </body>
+</html>
