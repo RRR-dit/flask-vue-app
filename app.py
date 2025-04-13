@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, redirect, jsonify, url_for
 from forms import NameForm # Flask-WTFフォーム（名前入力用）
 from models import db,User # SQLAlchemyのDBオブジェクトとモデル
+from flask_cors import CORS
+
 
 app = Flask(__name__)
 app.secret_key = "secret_key-0327" # フォームのCSRF対策で必要（Flask-WTFで使用）
+CORS(app)  
 
 #データベース設定 & 初期化
 #DBの設定（SQLiteファイルとして保存）
